@@ -1,0 +1,98 @@
+class Karyawan:
+    def __init__(self, nama, id_karyawan, gaji_pokok):
+        self.nama = nama
+        self.id_karyawan = id_karyawan
+        self.__gaji_pokok = gaji_pokok
+
+    # Getter gaji pokok
+    def get_gaji_pokok(self):
+        return self.__gaji_pokok
+
+    # Setter gaji pokok
+    def set_gaji_pokok(self, gaji_baru):
+        if gaji_baru <= 0:
+            print("Peringatan: Gaji pokok harus lebih dari 0!")
+        else:
+            self.__gaji_pokok = gaji_baru
+            print("Gaji pokok berhasil diubah.")
+
+    def hitung_gaji_total(self):
+        return self.__gaji_pokok
+
+    def tampilkan_info(self):
+        print("Nama Karyawan :", self.nama)
+        print("ID Karyawan   :", self.id_karyawan)
+        print("Gaji Pokok    : Rp{:,.0f}".format(self.get_gaji_pokok()))
+
+
+class KaryawanTetap(Karyawan):
+    def __init__(self, nama, id_karyawan, gaji_pokok, tunjangan):
+        super().__init__(nama, id_karyawan, gaji_pokok)
+        self.tunjangan = tunjangan
+
+    def hitung_gaji_total(self):
+        return self.get_gaji_pokok() + self.tunjangan
+
+    def tampilkan_info(self):
+        print("\n=== DATA KARYAWAN TETAP ===")
+        super().tampilkan_info()
+        print("Tunjangan     : Rp{:,.0f}".format(self.tunjangan))
+        print("Total Gaji    : Rp{:,.0f}".format(self.hitung_gaji_total()))
+
+
+class KaryawanKontrak(Karyawan):
+    def __init__(self, nama, id_karyawan, gaji_pokok,
+                 jam_lembur, tarif_lembur):
+        super().__init__(nama, id_karyawan, gaji_pokok)
+        self.jam_lembur = jam_lembur
+        self.tarif_lembur = tarif_lembur
+
+    def hitung_gaji_total(self):
+        return (
+            self.get_gaji_pokok()
+            + (self.jam_lembur * self.tarif_lembur)
+        )
+
+    def tampilkan_info(self):
+        print("\n=== DATA KARYAWAN KONTRAK ===")
+        super().tampilkan_info()
+        print("Jam Lembur    :", self.jam_lembur, "jam")
+        print("Tarif Lembur  : Rp{:,.0f}".format(self.tarif_lembur))
+        print("Total Lembur  : Rp{:,.0f}".format(
+            self.jam_lembur * self.tarif_lembur
+        ))
+        print("Total Gaji    : Rp{:,.0f}".format(self.hitung_gaji_total()))
+
+
+# MAIN PROGRAM
+
+karyawan1 = KaryawanTetap(
+    "Andi Saputra", "K001", 5000000, 1000000
+)
+
+karyawan2 = KaryawanKontrak(
+    "Budi Santoso", "K002", 3500000, 10, 50000
+)
+
+# Menyimpan objek ke dalam list
+daftar_karyawan = [karyawan1, karyawan2]
+
+# Pengujian polymorphism
+print("===================================")
+print("     SISTEM PENGGAJIAN KARYAWAN")
+print("===================================")
+
+for karyawan in daftar_karyawan:
+    karyawan.tampilkan_info()
+
+# Pengujian encapsulation
+print("\n=== PENGUJIAN ENCAPSULATION ===")
+
+print("\nMengubah gaji pokok dengan nilai tidak valid:")
+karyawan1.set_gaji_pokok(0)
+
+print("\nMengubah gaji pokok dengan nilai valid:")
+karyawan1.set_gaji_pokok(6000000)
+
+print("\nData karyawan setelah perubahan gaji:")
+karyawan1.tampilkan_info()
